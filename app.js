@@ -1,14 +1,14 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const settings = require('./settings.json');
-const package = require('./package.json')
+const package = require('./package.json');
 
 client.on('ready',() => {
-	console.log('I\'m Online\nI\'m Online');
+	console.log(`SCPFBOT ${package.version} loaded`);
 });
 
 client.on('guildDelete', guild =>{
-	console.log('I have left ${guild.name} at $(new Date()})');
+	console.log(`I have left ${guild.name} at $(new Date()})`);
 });
 
 client.on('guildMemberAdd', member => {
@@ -37,8 +37,16 @@ client.on('message', message => {
 			client.user.setGame(argresult);
 		} else
 	if (message.content.startsWith(prefix + 'version')) {
-			message.channel.send(`\`SCPFBOT ${package.version}\``)
+			message.channel.send(`\`SCPFBOT ${package.version}\``);
+	} else
+	if (message.content.startsWith(prefix + 'amigay')) {
+			message.channel.send('yes you are gay');
+	} else
+	if (message.content.startsWith(prefix + 'areyouparsfriend')) {
+			message.channel.send('yes i am par\'s best friend')
 	}
+
+
 
 
 
