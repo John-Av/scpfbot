@@ -2,6 +2,7 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const settings = require('./settings.json');
 const package = require('./package.json');
+const hook = new Discord.WebhookClient('469963087072591872', 'BAPfvhNEaMDo7g6JsbuUDR1TGaK3tTcQ8tYPk33d1z8F4ud0_nVmhWDqoBBt7IVJrbEF')
 
 client.on('ready',() => {
 	console.log(`SCPFBOT ${package.version} loaded`);
@@ -31,7 +32,8 @@ client.on('message', message => {
 			client.channels.get('463517546403069973').send('@everyone Startup at https://www.roblox.com/games/2001105521/Area-108#!/about');
 	} else
 	if (message.content.startsWith(prefix + 'announce')) {
-			client.channels.get('463517546403069973').send(argresult);
+			message.channel.send(`Dispatching Announcer Bot`)
+			hook.send(argresult)
 	} else
 	if (message.content.startsWith(prefix + 'setgame')) {
 			client.user.setGame(argresult);
