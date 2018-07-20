@@ -1,6 +1,6 @@
 {
   "name": "scpfbot",
-  "version": "0.0.5",
+  "version": "0.5.1",
   "description": "A bot used to manage the SCPF group and discord.",
   "main": "app.js",
   "scripts": {
