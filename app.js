@@ -7,7 +7,16 @@ client.on('ready',() => {
 	console.log('I\'m Online\nI\'m Online');
 });
 
-var prefix = "~"
+client.on('guildDelete', guild =>{
+	console.log('I have left ${guild.name} at $(new Date()})');
+});
+
+client.on('guildMemberAdd', member => {
+	let guild = member.guild;
+	guild.defaultChannel.send(`Please welcome ${member.user.username} to the server!`)
+})
+
+var prefix = ";"
 client.on('message', message => {
 	if (!message.content.startsWith(prefix)) return;
 	let args = message.content.split(' ').slice(1);
@@ -30,7 +39,7 @@ client.on('message', message => {
 	if (message.content.startsWith(prefix + 'version')) {
 			message.channel.send(`\`SCPFBOT ${package.version}\``)
 	}
-		
+
 
 
 
