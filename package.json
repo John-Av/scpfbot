@@ -1,0 +1,15 @@
+{
+  "name": "scpfbot",
+  "version": "0.0.5",
+  "description": "A bot used to manage the SCPF group and discord.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Paritiol",
+  "respository": "SCPFBOT",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^11.3.2"
+  }
+}
