@@ -2,7 +2,6 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const settings = require('./settings.json');
 const package = require('./package.json');
-const hook = new Discord.WebhookClient('469963087072591872', 'BAPfvhNEaMDo7g6JsbuUDR1TGaK3tTcQ8tYPk33d1z8F4ud0_nVmhWDqoBBt7IVJrbEF');
 const ddiff = require('return-deep-diff');
 const chalk = require('chalk');
 const fs = require('fs');
