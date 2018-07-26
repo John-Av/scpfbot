@@ -1,6 +1,6 @@
 {
   "name": "scpfbot",
-  "version": "0.6.2",
+  "version": "0.11.0",
   "description": "A bot used to manage the SCPF group and discord.",
   "main": "app.js",
   "scripts": {
@@ -10,6 +10,10 @@
   "respository": "SCPFBOT",
   "license": "MIT",
   "dependencies": {
-    "discord.js": "^11.3.2"
+    "chalk": "^2.4.1",
+    "discord.js": "^11.3.2",
+    "moment": "^2.22.2",
+    "ms": "^2.1.1",
+    "return-deep-diff": "^0.3.0"
   }
 }
