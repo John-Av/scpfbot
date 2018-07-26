@@ -2,58 +2,74 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const settings = require('./settings.json');
 const package = require('./package.json');
-const hook = new Discord.WebhookClient('469963087072591872', 'BAPfvhNEaMDo7g6JsbuUDR1TGaK3tTcQ8tYPk33d1z8F4ud0_nVmhWDqoBBt7IVJrbEF')
+const hook = new Discord.WebhookClient('469963087072591872', 'BAPfvhNEaMDo7g6JsbuUDR1TGaK3tTcQ8tYPk33d1z8F4ud0_nVmhWDqoBBt7IVJrbEF');
+const ddiff = require('return-deep-diff');
+const chalk = require('chalk');
+const fs = require('fs');
+const moment = require('moment')
+require('./util/eventLoader')(client);
 
-client.on('ready',() => {
-	console.log(`SCPFBOT ${package.version} loaded`);
+const log = message => {
+  console.log(`[${moment().format('YYYY-MM-DD HH:mm:ss')}] ${message}`);
+};
+
+client.commands = new Discord.Collection();
+client.aliases = new Discord.Collection();
+fs.readdir('./commands/', (err, files) => {
+  if (err) console.error(err);
+  log(`Loading a total of ${files.length} commands.`);
+  files.forEach(f => {
+    let props = require(`./commands/${f}`);
+    log(`Loading Command: ${props.help.name}. 👌`);
+    client.commands.set(props.help.name, props);
+    props.conf.aliases.forEach(alias => {
+      client.aliases.set(alias, props.help.name);
+    });
+  });
 });
 
-client.on('guildDelete', guild =>{
-	console.log(`I have left ${guild.name} at $(new Date()})`);
+client.reload = command => {
+  return new Promise((resolve, reject) => {
+    try {
+      delete require.cache[require.resolve(`./commands/${command}`)];
+      let cmd = require(`./commands/${command}`);
+      client.commands.delete(command);
+      client.aliases.forEach((cmd, alias) => {
+        if (cmd === command) client.aliases.delete(alias);
+      });
+      client.commands.set(command, cmd);
+      cmd.conf.aliases.forEach(alias => {
+        client.aliases.set(alias, cmd.help.name);
+      });
+      resolve();
+    } catch (e){
+      reject(e);
+    }
+  });
+};
+
+client.elevation = message => {
+  /* This function should resolve to an ELEVATION level which
+     is then sent to the command handler for verification*/
+  let permlvl = 0;
+  let mod_role = message.guild.roles.find('name', settings.modrolename);
+  if (mod_role && message.member.roles.has(mod_role.id)) permlvl = 2;
+  let admin_role = message.guild.roles.find('name', settings.adminrolename);
+  if (admin_role && message.member.roles.has(admin_role.id)) permlvl = 3;
+  if (message.author.id === settings.ownerid) permlvl = 4;
+  return permlvl;
+};
+
+client.on('debug', e => {
+	console.log(chalk.bgBlue(e))
 });
 
-client.on('guildMemberAdd', member => {
-	let guild = member.guild;
-	guild.defaultChannel.send(`Please welcome ${member.user.username} to the server!`)
-})
+client.on('warn', e => {
+	console.log(chalk.bgYellow(e))
+});
 
-var prefix = ";"
-client.on('message', message => {
-	if (!message.content.startsWith(prefix)) return;
-	let args = message.content.split(' ').slice(1);
-	var argresult = args.join(' ');
-	if (message.author === client.user) return;
-
-	if (message.content.startsWith(prefix + 'ping')) {
-		message.channel.send(`Pong! \`${Date.now() - message.createdTimestamp} ms\``);
-	} else
-
-	if (message.content.startsWith(prefix + '108startup')) {
-			client.channels.get('463517546403069973').send('@everyone Startup at https://www.roblox.com/games/2001105521/Area-108#!/about');
-	} else
-	if (message.content.startsWith(prefix + 'announce')) {
-			message.channel.send(`Dispatching Announcer Bot`)
-			hook.send(argresult)
-	} else
-	if (message.content.startsWith(prefix + 'setgame')) {
-			client.user.setGame(argresult);
-		} else
-	if (message.content.startsWith(prefix + 'version')) {
-			message.channel.send(`\`SCPFBOT ${package.version}\``);
-	} else
-	if (message.content.startsWith(prefix + 'amigay')) {
-			message.channel.send('yes you are gay');
-	} else
-	if (message.content.startsWith(prefix + 'areyouparsfriend')) {
-			message.channel.send('yes i am par\'s best friend')
-	}
-
-
-
-
-
-
-
+client.on('error', e => {
+	console.log(chalk.bgRed(e))
 });
 
 client.login(settings.token);
